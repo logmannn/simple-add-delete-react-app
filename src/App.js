@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import uuid from "uuid";
+import $ from "jquery";
 import Projects from "./components/projects";
 import AddProject from "./components/addProject";
+import Todos from "./components/todos";
 import "./App.css";
 
 class App extends Component {
@@ -12,7 +14,22 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
+  getToDos() {
+    $.ajax({
+      url: "http://jsonplaceholder.typicode.com/todos",
+      dataType: "json",
+      success: function(data) {
+        this.setState({ todos: data }, function() {
+          console.log(this.state);
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(err);
+      }
+    });
+  }
+
+  getProjects() {
     this.setState({
       projects: [
         {
@@ -32,6 +49,15 @@ class App extends Component {
         }
       ]
     });
+  }
+
+  componentWillMount() {
+    this.getProjects();
+    this.getToDos();
+  }
+
+  componentDidMount() {
+    this.getToDos();
   }
 
   handleAddProject(project) {
@@ -56,6 +82,7 @@ class App extends Component {
           projects={this.state.projects}
           onDelete={this.handleDeleteProject.bind(this)}
         />
+        <Todos todos={this.state.todos} />
       </div>
     );
   }

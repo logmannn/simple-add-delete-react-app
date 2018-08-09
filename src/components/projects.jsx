@@ -26,6 +26,7 @@ class Projects extends Component {
   }
 }
 
+// good practice to do this
 Projects.propTypes = {
   projects: PropTypes.array,
   onDelete: PropTypes.func
